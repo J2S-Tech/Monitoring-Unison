@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# script suitable to be passed as a merge command to Unison merge option
+# Copyright (C) 2012  Vyacheslav Levit
+# License: GPLv3 or later. See COPYING or <http://www.gnu.org/licenses/.
+
+function usage
+{
+    echo "Usage: ${0##*/} [newer|larger|local|remote] CURRENT1 CURRENT2 NEW \
+        [CONFLICT_FILE] [COMMAND]" >&2
+}
+
+(($# < 4 || $# > 6)) && { usage; exit 2; }
+
+whowins="$1"; cur1="$2"; cur2="$3"; new="$4"; log="$5"; cmd="$6"
+
+case "$whowins" in
+    newer)
+        [[ "$cur1" -nt "$cur2" ]] && win="$cur1" ;;
+    larger)
+        [[ "$(stat -c %s "$cur1")" -ge "$(stat -c %s "$cur2")" ]] && win="$cur1" ;;
+    "local")
+        win="$cur1" ;;
+    remote)
+        win="$cur2" ;;
+    *)
+        usage; exit 2
+esac
+
+[[ "$win" == "$cur1" ]] && bak="$cur2" || { win="$cur2" ; bak="$cur1" ; }
+
+bakdate=$(date --date=@$(stat -c %Y "$bak") +%Y-%m-%d_%H%M%S)
+orig_name="${bak#*.unison.merge[0-9]-}"
+dir="${bak%/*}"
+[[ "$dir" == "$bak" ]] && dir= || dir="$dir/"
+newbak_name=".bak.$bakdate.$orig_name"
+newbak_path="$dir$newbak_name"
+
+[[ -n "$log" ]] && echo "$dir$orig_name" >> "$log"
+[[ -n "$cmd" ]] && sh -c "$cmd $dir$orig_name" &
+mv "$win" "$new" && mv "$bak" "$newbak_path"
