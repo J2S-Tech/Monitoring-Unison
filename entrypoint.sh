@@ -28,4 +28,4 @@ chown -R $UNISON_USER:$UNISON_GROUP $UNISON_DIR
 cd $UNISON_DIR
 
 # Run unison server as UNISON_USER and pass signals through
-exec su-exec $UNISON_USER unison -socket 5000
+exec su-exec $UNISON_USER unison -socket $UNISON_PORT
