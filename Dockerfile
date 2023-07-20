@@ -1,7 +1,7 @@
 FROM alpine:edge
 
 
-ARG UNISON_VERSION=2.51.2
+ARG UNISON_VERSION=2.53.3
 
 # Install in one run so that build tools won't remain in any docker layers
 # Install build tools
