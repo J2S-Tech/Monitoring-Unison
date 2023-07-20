@@ -1,5 +1,5 @@
 FROM alpine:edge
-MAINTAINER Onni Hakala <onni.hakala@geniem.com>
+
 
 ARG UNISON_VERSION=2.51.2
 
@@ -22,8 +22,7 @@ RUN apk add --update build-base curl bash su-exec tini && \
     deluser xfs
 
 # These can be overridden later
-ENV TZ="Europe/Helsinki" \
-    LANG="C.UTF-8" \
+ENV LANG="C.UTF-8" \
     UNISON_DIR="/data" \
     HOME="/tmp" \
     ##
@@ -36,9 +35,9 @@ ENV TZ="Europe/Helsinki" \
 
 
 # Install unison server script
-COPY entrypoint.sh /entrypoint.sh
-
-VOLUME /unison
+COPY ./entrypoint.sh /entrypoint.sh
+COPY ./helpers/unison-merge /usr/bin
 
 EXPOSE 5000
+
 ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
