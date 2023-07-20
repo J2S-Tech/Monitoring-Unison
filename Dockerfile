@@ -24,6 +24,7 @@ RUN apk add --update build-base curl bash su-exec tini && \
 # These can be overridden later
 ENV LANG="C.UTF-8" \
     UNISON_DIR="/data" \
+    UNISON_PORT="9999" \
     HOME="/tmp" \
     ##
     # Use 1000:1001 as default user
@@ -38,6 +39,5 @@ ENV LANG="C.UTF-8" \
 COPY ./entrypoint.sh /entrypoint.sh
 COPY ./helpers/unison-merge /usr/bin
 
-EXPOSE 5000
 
 ENTRYPOINT ["/sbin/tini", "--", "/entrypoint.sh"]
