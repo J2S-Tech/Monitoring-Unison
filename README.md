@@ -13,13 +13,13 @@ The docker image is available on Docker Hub:
 First, you can launch a volume container exposing a volume with Unison.
 
 ```bash
-$ CID=$(docker run -d -p 5000:5000 -e UNISON_DIR=/data -v /data onnimonni/unison)
+$ CID=$(docker run -d -p 9999:9999 -e UNISON_DIR=/data -v /data onnimonni/unison)
 ```
 
 You can then sync a local folder to `$UNISON_DIR` (default value: `/data`) in the container with:
 
 ```bash
-$ unison . socket://<docker>:5000/ -auto -batch
+$ unison . socket://<docker>:9999/ -auto -batch
 ```
 
 Next, you can launch a container connected with the volume under `/data`.
@@ -33,6 +33,8 @@ This container has few envs that you can alter.
 
 `UNISON_DIR` - This is the directory which receives data from unison inside the container.
 This is also the directory which you can use in other containers with `volumes_from` directive.
+
+`UNISON_PORT` - Socket Port unison inside container.
 
 `UNISON_GID` - Group ID for the user running unison inside container.
 
@@ -57,10 +59,11 @@ unison:
   image: onnimonni/unison
   environment:
     - UNISON_DIR=/var/www/project
+    - UNISON_PORT=9999
     - UNISON_UID=10000
     - UNISON_GID=10000
   ports:
-    - "5000:5000"
+    - "9999:9999"
   volumes:
     - /var/www/project
 ```
@@ -68,13 +71,13 @@ unison:
 You can then sync a local folder, using the unison client, to `/var/www/project` in the container with:
 
 ```bash
-$ unison . socket://<docker>:5000/ -ignore 'Path .git' -auto -batch
+$ unison . socket://<docker>:9999/ -ignore 'Path .git' -auto -batch
 ```
 
 You can use `-repeat watch` to sync everytime when files change:
 
 ```bash
-$ unison . socket://<docker>:5000/ -repeat watch -ignore 'Path .git' -auto -batch
+$ unison . socket://<docker>:9999/ -repeat watch -ignore 'Path .git' -auto -batch
 ```
 
 **NOTE: In order to use `-repeat` option you need to install unison-fsmonitor.**
