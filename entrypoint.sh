@@ -17,9 +17,9 @@ if [ ! -d "$UNISON_DIR/.unison" ]; then
 fi
 
 # Symlink .unison folder from user home directory to sync directory so that we only need 1 volume
-if [ ! -h "$UNISON_DIR/.unison" ]; then
-    ln -s /unison /home/$UNISON_USER/.unison >> /dev/null 2>&1
-fi
+#if [ ! -h "$UNISON_DIR/.unison" ]; then
+#    ln -s /unison /home/$UNISON_USER/.unison >> /dev/null 2>&1
+#fi
 
 # Change data owner
 chown -R $UNISON_USER:$UNISON_GROUP $UNISON_DIR
