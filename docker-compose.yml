@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  rsync:
+    image: 172.31.2.98:55000/unison:latest
+    container_name: unison
+    volumes:
+      - local_data:/data
+      - remote_data:/unison
+    ports:
+      - "55000:9999"
+    command:
+      - sh
+      - -c
+      - |
+        unison /unison/ socket://172.31.45.121:55000/ -repeat watch -auto -batch -confirmbigdel=false -merge="Name * -> unison-merge newer CURRENT1 CURRENT2 NEW" -ignore="Name .*" &
+        unison -socket 9999
+
+volumes:
+  local_data:
+    driver: local
+  remote_data:
+    driver: local
