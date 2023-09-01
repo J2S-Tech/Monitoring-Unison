@@ -5,7 +5,7 @@ ARG UNISON_VERSION=2.53.3
 
 # Install in one run so that build tools won't remain in any docker layers
 # Install build tools
-RUN apk add --update build-base curl bash su-exec tini tzdata && \
+RUN apk add --update build-base curl bash su-exec tini tzdata procps && \
     # Install ocaml & emacs from testing repositories
     apk add --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ ocaml emacs && \
     # Download & Install Unison
